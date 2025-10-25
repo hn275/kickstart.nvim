@@ -223,6 +223,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- [[ Go if error != nil short cut ]]
+--    In insert mode, Control e should type out `err != nil {}`
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+  desc = 'Go if err != nil {}',
+  pattern = { 'go' },
+  group = vim.api.nvim_create_augroup('GoErrNotNil', { clear = true }),
+  callback = function()
+    vim.keymap.set('i', '<C-e>', 'err != nil {}<ESC>i<CR><ESC>O', { noremap = true, silent = true })
+  end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -550,7 +561,11 @@ require('lazy').setup({
             vim.diagnostic.jump { count = -1, float = true }
           end, '[G]oto [P]revious diagnostic')
 
-          map('K', vim.lsp.buf.hover, 'Hover')
+          map('K', function()
+            vim.lsp.buf.hover {
+              border = 'single',
+            }
+          end, 'Hover')
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
@@ -1089,6 +1104,20 @@ require('lazy').setup({
         close = 'q',
       },
     },
+  },
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    -- dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.nvim" }, -- if you use the mini.nvim suite
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
+  },
+  {
+    'zeioth/garbage-day.nvim',
+    dependencies = 'neovim/nvim-lspconfig',
+    event = 'VeryLazy',
   },
 }, {
   ui = {
