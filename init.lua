@@ -234,6 +234,12 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
   end,
 })
 
+-- [[ vertical line highlight ]]
+vim.cmd [[
+set iskeyword+=-
+set colorcolumn=100
+]]
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -703,13 +709,13 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        pyright = {},
         clangd = {
           capabilities = {
             offsetEncoding = 'utf-8',
           },
         },
         gopls = {},
-        -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -801,6 +807,7 @@ require('lazy').setup({
         end
       end,
       formatters_by_ft = {
+        c = { 'clang-format' },
         lua = { 'stylua' },
         css = { 'prettierd', 'prettier', stop_after_first = true },
         html = { 'prettierd', 'prettier', stop_after_first = true },
@@ -820,6 +827,7 @@ require('lazy').setup({
         toml = { 'taplo' },
         http = { 'kulala-fmt' },
         json = { 'jq' },
+        jsonc = { 'jq' },
         yaml = { 'yamlfmt' },
       },
       formatters = {
